@@ -1,0 +1,17 @@
+\section*{Does Claude plan its rhymes?}
+How does Claude write rhyming poetry? Consider this ditty:\\
+He saw a carrot and had to grab it, His hunger was like a starving rabbit
+
+To write the second line, the model had to satisfy two constraints at the same time: the need to rhyme (with "grab it"), and the need to make sense (why did he grab the carrot?). Our guess was that Claude was writing word-by-word without much forethought until the end of the line, where it would make sure to pick a word that rhymes. We therefore expected to see a circuit with parallel paths, one for ensuring the final word made sense, and one for ensuring it rhymes.
+
+Instead, we found that Claude plans ahead. Before starting the second line, it began "thinking" of potential on-topic words that would rhyme with "grab it". Then, with these plans in mind, it writes a line to end with the planned word.
+
+\begin{figure}[h]
+\begin{center}
+  \includegraphics[alt={},max width=\textwidth]{rhyme-planning-suppression-injection}
+\captionsetup{labelformat=empty}
+\caption{How Claude completes a two-line poem. Without any intervention (upper section), the model plans the rhyme "rabbit" at the end of the second line in advance. When we suppress the "rabbit" concept (middle section), the model instead uses a different planned rhyme. When we inject the concept "green" (lower section), the model makes plans for this entirely different ending.}
+\end{center}
+\end{figure}
+
+To understand how this planning mechanism works in practice, we conducted an experiment inspired by how neuroscientists study brain function, by pinpointing and altering neural activity in specific parts of the brain (for example using electrical or magnetic currents). Here, we modified the part of Claude's internal state that represented the "rabbit" concept. When we subtract out the "rabbit" part, and have Claude continue the line, it writes a new one ending in "habit", another sensible completion. We can also inject the concept of "green" at that point, causing Claude to write a sensible (but no-longer rhyming) line which ends in "green". This demonstrates both planning ability and adaptive flexibility -Claude can modify its approach when the intended outcome changes.
